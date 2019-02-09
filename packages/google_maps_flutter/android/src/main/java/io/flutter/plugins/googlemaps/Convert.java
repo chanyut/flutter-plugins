@@ -121,6 +121,10 @@ class Convert {
     return Arrays.asList(latLng.latitude, latLng.longitude);
   }
 
+  static Object toJson(LatLngBounds latLngBounds) {
+    return Arrays.asList(toJson(latLngBounds.southwest), toJson(latLngBounds.northeast));
+  }
+
   private static LatLng toLatLng(Object o) {
     final List<?> data = toList(o);
     return new LatLng(toDouble(data.get(0)), toDouble(data.get(1)));

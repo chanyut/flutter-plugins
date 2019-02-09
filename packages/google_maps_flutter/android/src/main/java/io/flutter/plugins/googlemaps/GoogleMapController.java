@@ -25,9 +25,12 @@ import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.VisibleRegion;
+
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.PluginRegistry;
@@ -165,6 +168,11 @@ final class GoogleMapController
     return marker;
   }
 
+  private LatLngBounds getVisibleLatLngBounds() {
+    final VisibleRegion r = this.googleMap.getProjection().getVisibleRegion();
+    return r.latLngBounds;
+  }
+
   @Override
   public void onMapReady(GoogleMap googleMap) {
     this.googleMap = googleMap;
@@ -233,6 +241,13 @@ final class GoogleMapController
           final MarkerController marker = marker(markerId);
           Convert.interpretMarkerOptions(call.argument("options"), marker);
           result.success(null);
+          break;
+        }
+      case "get#visible#lat#lng#bounds":
+        {
+          LatLngBounds bounds = getVisibleLatLngBounds();
+          Log.d("googlemapcontroller", bounds.toString());
+          result.success(Convert.toJson(bounds));
           break;
         }
       default:

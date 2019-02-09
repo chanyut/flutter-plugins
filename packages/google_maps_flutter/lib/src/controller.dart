@@ -170,6 +170,12 @@ class GoogleMapController extends ChangeNotifier {
     return marker;
   }
 
+  Future<LatLngBounds> getVisibleLatLngBounds() async {
+     final dynamic json = await _channel.invokeMethod("get#visible#lat#lng#bounds");
+     LatLngBounds bounds = LatLngBounds.fromList(json);
+     return bounds;
+  }
+
   /// Updates the specified [marker] with the given [changes]. The marker must
   /// be a current member of the [markers] set.
   ///

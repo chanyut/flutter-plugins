@@ -25,6 +25,9 @@ class MoveCamera extends StatefulWidget {
 class MoveCameraState extends State<MoveCamera> {
   GoogleMapController mapController;
 
+  Marker _swMarker;
+  Marker _neMarker;
+
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
@@ -155,6 +158,29 @@ class MoveCameraState extends State<MoveCamera> {
                     );
                   },
                   child: const Text('zoomTo'),
+                ),
+                FlatButton(
+                  onPressed: () {
+                    mapController.getVisibleLatLngBounds().then((b) {
+                      print(
+                          "sw: ${b.southwest.toString()} ne: ${b.northeast.toString()}");
+                      if (_swMarker != null) {
+                        mapController.removeMarker(_swMarker);
+                        _swMarker = null;
+                      }
+                      if (_neMarker != null) {
+                        mapController.removeMarker(_neMarker);
+                        _neMarker = null;
+                      }
+                      mapController.addMarker(MarkerOptions(position: b.southwest)).then((m){
+                        _swMarker = m;
+                      });
+                      mapController.addMarker(MarkerOptions(position: b.northeast)).then((m){
+                        _neMarker = m;
+                      });
+                    });
+                  },
+                  child: const Text('visible area'),
                 ),
               ],
             ),
