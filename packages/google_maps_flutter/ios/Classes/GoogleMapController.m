@@ -119,6 +119,10 @@ static void interpretMarkerOptions(id json, id<FLTGoogleMapMarkerOptionsSink> si
   } else if ([call.method isEqualToString:@"marker#remove"]) {
     [self removeMarkerWithId:call.arguments[@"marker"]];
     result(nil);
+  } else if ([call.method isEqualToString:@"get#visible#lat#lng#bounds"]) {
+      GMSCoordinateBounds* bounds = [self getVisibleLatLngBound];
+      result(@[ @[ @(bounds.southWest.latitude), @(bounds.southWest.longitude) ],
+                @[ @(bounds.northEast.latitude), @(bounds.northEast.longitude) ],]);
   } else {
     result(FlutterMethodNotImplemented);
   }
@@ -167,6 +171,11 @@ static void interpretMarkerOptions(id json, id<FLTGoogleMapMarkerOptionsSink> si
     [markerController setVisible:NO];
     [_markers removeObjectForKey:markerId];
   }
+}
+
+-(GMSCoordinateBounds*) getVisibleLatLngBound {
+    GMSVisibleRegion r = _mapView.projection.visibleRegion;
+    return [[GMSCoordinateBounds alloc] initWithRegion:r];
 }
 
 #pragma mark - FLTGoogleMapOptionsSink methods

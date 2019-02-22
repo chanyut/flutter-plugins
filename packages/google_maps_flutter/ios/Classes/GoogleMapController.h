@@ -35,6 +35,7 @@
 - (NSString*)addMarkerWithPosition:(CLLocationCoordinate2D)position;
 - (FLTGoogleMapMarkerController*)markerWithId:(NSString*)markerId;
 - (void)removeMarkerWithId:(NSString*)markerId;
+- (GMSCoordinateBounds*)getVisibleLatLngBound;
 @end
 
 // Allows the engine to create new Google Map instances.
